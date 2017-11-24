@@ -40,7 +40,7 @@ public class BeatBox {
 
     public static void main(String[] args) {
 
-        new BeatBox().startUp(args[0]);
+        new BeatBox().startUp("gg allin");
     }
     public void startUp(String name) {
         userName = name;
@@ -344,13 +344,14 @@ public class BeatBox {
 
 
 
-    public void makeTracks(ArrayList<Integer> list) {
-
+    public void makeTracks(ArrayList list) {
+        Iterator it = list.iterator();
         for (int i=0; i < 16; i++) {
-            int key = list.get(i);
-            if (key != 0) {
-                track.add(makeEvent(144,9,key,100, i));
-                track.add(makeEvent(128,9,key,100,i+1));
+            Integer num = (Integer) it.next();
+            if (num != null) {
+                int numKey = num.intValue();
+                track.add(makeEvent(144,9,numKey,100, i));
+                track.add(makeEvent(128,9,numKey,100,i+1));
             }
         }
     }
