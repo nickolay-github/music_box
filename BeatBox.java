@@ -98,7 +98,7 @@ public class BeatBox {
         buttonBox.add(clear);
 
         JButton sendIt = new JButton("sendIt");
-        sendIt.addActionListener(new MySendListenter());
+        sendIt.addActionListener(new MySendListener());
         buttonBox.add(sendIt);
 
         JTextField userMessage = new JTextField();
@@ -284,7 +284,7 @@ public class BeatBox {
                 out.writeObject(userName + nextNum++ + ": " + userMessage.getText());
                 out.writeObject(checkboxState);
             } catch (Exception e) {
-                System.out.println("sorry dude. Could not send it to the server.");
+                System.out.println("Sorry dude. Could not send it to the server.");
             }
             userMessage.setText("");
         }
@@ -303,28 +303,45 @@ public class BeatBox {
                 }
             }
         }
-
-        public class RemoteReader implements Runnable {
-            boolean[] checkboxState = null;
-            String nameToShow = null;
-            Object obj = null;
-            public void run() {
-                try {
-                    while((obj=in.readObject()) != null) {
-                        System.out.println("got an object from server");
-                        System.out.println(obj.getClass());
-                        String nameToShow = (String) obj;
-                        checkboxState = (boolean[]) in.readObject();
-                        otherSeqsMap.put(nameToShow, checkboxState);
-                        listVector.add(nameToShow);
-                        incomingList.setListData(listVector);
+    }
+    public class RemoteReader implements Runnable {
+        boolean[] checkboxState = null;
+        String nameToShow = null;
+        Object obj = null;
+        public void run() {
+            try {
+                while((obj=in.readObject()) != null) {
+                    System.out.println("got an object from server");
+                    System.out.println(obj.getClass());
+                    String nameToShow = (String) obj;
+                    checkboxState = (boolean[]) in.readObject();
+                    otherSeqsMap.put(nameToShow, checkboxState);
+                    listVector.add(nameToShow);
+                    incomingList.setListData(listVector);
                     }
-                } catch (Exception ex) {ex.printStackTrace();}
+            } catch (Exception ex) {ex.printStackTrace();}
+        }
+    }
+
+    public class MyPlayMineListener implements ActionListener {
+        public void actionPerformed(ActionEvent a) {
+            if (mySequence != null) {
+                sequence = mySequence;
             }
         }
-
-        public
     }
+
+    public void changeSequence(boolean[] checkboxState) {
+        for (int i=0; i<256; i++) {
+            JCheckBox check = (JCheckBox) checkboxList.get(i);
+            if (checkboxState[i]) {
+                check.setSelected(true);
+            } else {
+                check.setSelected(false);
+            }
+        }
+    }
+
 
 
     public void makeTracks(ArrayList<Integer> list) {
