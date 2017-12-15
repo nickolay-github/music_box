@@ -18,10 +18,10 @@ public class BeatBox {
     JList incomingList;
     JTextField userMessage;
     ArrayList<JCheckBox> checkboxList;
-    int nextNum;
+    public static int nextNum;
     Vector<String> listVector = new Vector<String>();
     String userName;
-    ObjectOutputStream out;
+    ObjectOutputStream out_stream;
     ObjectInputStream in;
     HashMap<String, boolean[]> otherSeqsMap = new HashMap<String, boolean[]>();
 
@@ -40,13 +40,15 @@ public class BeatBox {
 
     public static void main(String[] args) {
 
-        new BeatBox().startUp("gg allin");
+        new BeatBox().startUp(args[0]);
+        nextNum = nextNum + 1;
     }
     public void startUp(String name) {
         userName = name;
+
         try {
             Socket sock = new Socket("127.0.0.1", 4242);
-            out = new ObjectOutputStream(sock.getOutputStream());
+            out_stream = new ObjectOutputStream(sock.getOutputStream());
             in = new ObjectInputStream(sock.getInputStream());
             Thread remote = new Thread(new RemoteReader());
             remote.start();
@@ -279,14 +281,18 @@ public class BeatBox {
                     checkboxState[i] = true;
                 }
             }
-            String messageToSend = null;
+            String messageToSend = "source";
+
             try {
-                out.writeObject(userName + nextNum++ + ": " + userMessage.getText());
-                out.writeObject(checkboxState);
+
+                out_stream.writeObject(userName + nextNum + ": " + messageToSend);
+                out_stream.writeObject(checkboxState);
             } catch (Exception e) {
-                System.out.println("Sorry dude. Could not send it to the server.");
+                e.printStackTrace();
+                System.out.println("Sorry dude. Could not send it to the server.!!!");
+
             }
-            userMessage.setText("");
+            //userMessage.setText("");
         }
     }
 
